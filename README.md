@@ -1,3 +1,9 @@
+docker + jenkins + fabricでデプロイ環境構築
+====
+
+jenkinsでwebサーバに対してデプロイ、DBに対してSQL実行などをjenkinsから出来るようにするための手順などが書かれてます。
+.ssh/ディレクトリの設定や、jenkinsジョブ、fabfile.pyなどは環境に合わせて修正をしてください。
+
 ## require
 * docker
 * openssh (.ssh/)の設定ファイル
@@ -115,6 +121,14 @@ $ docker rm -f deployserver && docker rmi deployserver
 ### exitedで終了しているコンテナを一括削除
 $ docker rm $(docker ps -a --filter 'status=exited' -q)
 ```
+
+## Licence
+
+[MIT](https://github.com/hirasaki1985/jenkins_fabric/blob/master/LICENSE)
+
+## Author
+
+[m.hirasaki](https://github.com/hirasaki1985)
 
 
 
