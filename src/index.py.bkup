@@ -1,0 +1,41 @@
+# coding: utf-8
+import os, sys
+import argparse
+import paramiko
+
+from logging import getLogger, StreamHandler, INFO, DEBUG
+
+logger = getLogger(__name__)
+handler = StreamHandler()
+handler.setLevel(INFO)
+logger.setLevel(INFO)
+logger.addHandler(handler)
+
+def main(args):
+  # ssh config fileを lookup
+  config_file = os.path.join(os.getenv('HOME'), '.ssh/config')
+  ssh_config = paramiko.SSHConfig()
+  ssh_config.parse(open(config_file, 'r'))
+  lkup = ssh_config.lookup("gn-stg-db01")
+
+  ssh = paramiko.SSHClient()
+  ssh.load_system_host_keys()
+  ssh.connect(
+    lkup['hostname'],
+    username=lkup['user'],
+    #key_filename=lkup['identityfile'],
+    sock=paramiko.ProxyCommand(lkup['proxycommand'])
+  )
+
+  sftp = ssh.open_sftp()
+
+  sftp.close()
+  ssh.close()
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser()
+
+  #parser.add_argument("-hostname", "-h", help="", default="gn-stg-db01")
+
+  args = parser.parse_args()
+  main(args)
